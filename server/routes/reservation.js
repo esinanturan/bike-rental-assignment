@@ -27,7 +27,7 @@ router.post(
       startTime: req.body.startTime,
       endTime: req.body.endTime,
     })
-      .then((user) =>
+      .then((reservation) =>
         res.json({
           success: true,
           message: "The reservation has been created successfully.",

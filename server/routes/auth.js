@@ -44,7 +44,7 @@ router.post(
     db.User.findOne({ where: { email: req.body.email } })
       .then((user) => {
         if (!user instanceof db.User)
-          res.json({ success: false, message: "User not found" });
+          return res.json({ success: false, message: "User not found" });
 
         const result = bcrypt.compareSync(req.body.password, user.password);
         res.json({

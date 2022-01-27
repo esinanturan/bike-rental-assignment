@@ -10,7 +10,7 @@ const container = hoc((props) => {
       model: "",
       location: "",
       color: "",
-      isAvailable: 1,
+      isAvailable: false,
       rating: 0,
     },
     onSubmit: (values) => {
@@ -21,9 +21,7 @@ const container = hoc((props) => {
   const fetchCreateProduct = useCallback(
     async (values) => {
       toaster.closeAll();
-
       const response = await createProduct(values);
-
       if (response?.success) formik.resetForm();
     },
     [formik]

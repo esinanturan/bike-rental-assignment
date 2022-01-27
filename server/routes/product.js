@@ -10,7 +10,17 @@ router.get(
   (req, res) => {
     db.Product.findAll()
       .then((products) => res.json({ success: true, data: products }))
-      .catch((err) => res.json({ succes: false, message: err.message }));
+      .catch((err) => res.json({ success: false, message: err.message }));
+  }
+);
+
+router.get(
+  "/all",
+  passport.authenticate("bearer", { session: false }),
+  (req, res) => {
+    db.Product.findAll()
+      .then((products) => res.json({ success: true, data: products }))
+      .catch((err) => res.json({ success: false, message: err.message }));
   }
 );
 
@@ -21,8 +31,19 @@ router.get(
     db.Product.findOne({ where: { id: req.params.productId } })
       .then((product) => {
         if (product instanceof db.Product !== true)
-          res.json({ success: false, message: "Product not found" });
-        res.json({ success: true, data: product });
+          return res.json({ success: false, message: "Product not found" });
+
+        const productValue = product.toJSON();
+        res.json({
+          success: true,
+          data: {
+            ...productValue,
+            availableRange: [
+              productValue.availabilityStartDate,
+              productValue.availabilityEndDate,
+            ],
+          },
+        });
       })
       .catch((err) => res.json({ success: false, message: err.message }));
   }
@@ -36,19 +57,30 @@ router.post(
   body("location").isLength({ max: 50 }).not().isEmpty().trim().escape(),
   body("rating").isNumeric(),
   body("isAvailable").isBoolean(),
+  body("availableRange").optional().isArray(),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
       return res.status(422).json({ success: false, errors: errors.array() });
 
-    db.Product.create({
+    const [availabilityStartDate, availabilityEndDate] =
+      req.body.availableRange;
+
+    const values = {
       model: req.body.model,
       color: req.body.color,
       location: req.body.location,
       rating: req.body.rating,
       isAvailable: req.body.isAvailable,
-    })
-      .then((user) =>
+    };
+
+    if (availabilityStartDate) {
+      values.availabilityStartDate = availabilityStartDate;
+      values.availabilityEndDate = availabilityEndDate;
+    }
+
+    db.Product.create(values)
+      .then((product) =>
         res.json({
           success: true,
           message: "The product has been created successfully.",
@@ -66,6 +98,7 @@ router.put(
   body("location").isLength({ max: 50 }).not().isEmpty().trim().escape(),
   body("rating").isNumeric(),
   body("isAvailable").isBoolean(),
+  body("availableRange").optional().isArray(),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
@@ -74,20 +107,27 @@ router.put(
     db.Product.findOne({ where: { id: req.params.productId } })
       .then((product) => {
         if (product instanceof db.Product !== true)
-          res.json({ succes: false, message: "Product not found" });
+          return res.json({ succes: false, message: "Product not found" });
       })
       .catch((err) => res.json({ succes: false, message: err.message }));
 
-    db.Product.update(
-      {
-        model: req.body.model,
-        color: req.body.color,
-        location: req.body.location,
-        rating: req.body.rating,
-        isAvailable: req.body.isAvailable,
-      },
-      { where: { id: req.params.productId } }
-    )
+    const values = {
+      model: req.body.model,
+      color: req.body.color,
+      location: req.body.location,
+      rating: req.body.rating,
+      isAvailable: req.body.isAvailable,
+    };
+
+    const [availabilityStartDate, availabilityEndDate] =
+      req.body.availableRange;
+
+    if (availabilityStartDate) {
+      values.availabilityStartDate = availabilityStartDate;
+      values.availabilityEndDate = availabilityEndDate;
+    }
+
+    db.Product.update(values, { where: { id: req.params.productId } })
       .then((result) =>
         res.json({
           success: true,

@@ -6,8 +6,8 @@ const navigation = [
   {
     name: "Products",
     children: [
-      { label: "List", value: "/product/all" },
-      { label: "Reservation", value: "/reservation/me" },
+      { label: "List", value: "/" },
+      { label: "Reservations", value: "/reservation/me" },
     ],
   },
   {

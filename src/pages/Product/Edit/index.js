@@ -1,6 +1,8 @@
 import { Heading, Pane, TextInput, Button, Select } from "evergreen-ui";
+import RangePicker from "@components/RangePicker";
 import Rating from "@mui/material/Rating";
 import container from "./container";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Edit = ({ formik }) => {
   return (
@@ -67,7 +69,7 @@ const Edit = ({ formik }) => {
                 onChange={formik.handleChange}
               />
             </Pane>
-            <Pane>
+            <Pane paddingBottom="1rem">
               <Pane paddingBottom="0.5rem">
                 <Heading size={200}>Availablity:</Heading>
               </Pane>
@@ -81,6 +83,21 @@ const Edit = ({ formik }) => {
                 <option value={false}>Not Available</option>
               </Select>
             </Pane>
+            {formik.values.isAvailable?.toString() === "true" ? (
+              <Pane>
+                <Pane paddingBottom="0.5rem">
+                  <Heading size={200}>Available Date Range:</Heading>
+                </Pane>
+                <Pane>
+                  <RangePicker
+                    name="availableRange"
+                    setFieldValue={formik.setFieldValue}
+                    selectsRange
+                    defaultValue={formik.values.availableRange}
+                  />
+                </Pane>
+              </Pane>
+            ) : null}
             <Pane paddingY="1rem">
               <Button type="submit" appearance="primary" width="10rem">
                 Save

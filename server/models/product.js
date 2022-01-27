@@ -17,6 +17,8 @@ module.exports = (sequelize, DataTypes) => {
       location: DataTypes.STRING,
       rating: DataTypes.NUMBER,
       isAvailable: DataTypes.BOOLEAN,
+      availabilityStartDate: DataTypes.DATE,
+      availabilityEndDate: DataTypes.DATE,
     },
     {
       sequelize,
