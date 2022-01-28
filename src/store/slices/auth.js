@@ -16,7 +16,9 @@ const authSlice = createSlice({
       state.token = action.token;
     },
     unsetAuth(state) {
-      state = initialState;
+      state.LOGGED_IN = false;
+      state.auth = null;
+      state.token = null;
     },
   },
 });

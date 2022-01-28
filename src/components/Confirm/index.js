@@ -7,7 +7,7 @@ const Confirm = ({
   setIsShown,
   children,
   confirmText,
-  onDelete,
+  onConfirm,
   item,
   ...rest
 }) => {
@@ -24,7 +24,7 @@ const Confirm = ({
         intent="danger"
         onCloseComplete={() => setIsShown(false)}
         onConfirm={() => {
-          onDelete(item);
+          onConfirm(item);
           setIsShown(false);
         }}
         confirmLabel="Delete"

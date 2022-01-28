@@ -10,22 +10,50 @@ router.get("/all", (req, res) => {
     .catch((err) => res.json({ succes: false, message: err.message }));
 });
 
+router.get(
+  "/me",
+  passport.authenticate("bearer", { session: false }),
+  (req, res) => {
+    db.Reservation.findAll({
+      where: { userId: req.user?.id },
+      include: [
+        {
+          model: db.Product,
+          required: true,
+        },
+      ],
+    })
+      .then((reservations) =>
+        res.json({
+          success: true,
+          data: reservations.map((reservation) => ({
+            ...reservation?.Product?.toJSON(),
+            ...reservation?.toJSON(),
+            Product: undefined,
+          })),
+        })
+      )
+      .catch((err) => res.json({ success: false, message: err.message }));
+  }
+);
+
 router.post(
   "/create",
   passport.authenticate("bearer", { session: false }),
-  body("productId").isNumeric().not().isEmpty().trim().escape(),
-  body("startTime").isDate().not().isEmpty(),
-  body("endTime").isDate().not().isEmpty(),
+  body("productId").isNumeric().trim().escape(),
+  body("pickedRange").isArray(),
   (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
-      return res.status(422).json({ succes: false, errors: errors.array() });
+      return res.status(422).json({ success: false, errors: errors.array() });
+
+    const [startTime, endTime] = req.body.pickedRange;
 
     db.Reservation.create({
       productId: req.body.productId,
-      userId: req.user.id,
-      startTime: req.body.startTime,
-      endTime: req.body.endTime,
+      userId: req.user?.id,
+      startTime,
+      endTime,
     })
       .then((reservation) =>
         res.json({
@@ -51,7 +79,7 @@ router.delete(
         reservation.destroy();
         res.json({
           success: true,
-          message: "The reservation has been deleted.",
+          message: "The reservation has been cancelled.",
         });
       })
       .catch((err) => res.json({ success: false, message: err.message }));

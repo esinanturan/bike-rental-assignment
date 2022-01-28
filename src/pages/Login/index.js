@@ -1,7 +1,8 @@
 import { Pane, Paragraph, Heading, TextInput, Button } from "evergreen-ui";
 import ButtonLink from "@components/ButtonLink";
+import container from "./container";
 
-const LoginPage = (props) => {
+const LoginPage = ({ formik }) => {
   return (
     <Pane
       elevation={4}
@@ -21,31 +22,52 @@ const LoginPage = (props) => {
         <Paragraph textAlign="center" paddingBottom="1rem">
           Please login your account with the credentials.
         </Paragraph>
-        <Pane display="flex" flexDirection="column" paddingX="1rem">
-          <Pane display="flex" justifyContent="center">
-            <TextInput type="text" placeholder="Email" width={"100%"} />
-          </Pane>
-          <Pane display="flex" justifyContent="center" paddingY="1rem">
-            <TextInput type="password" placeholder="Password" width={"100%"} />
-          </Pane>
-          <Pane display="flex" gap="1rem">
-            <Button display="flex" flex="1" appearance="default">
-              Login
-            </Button>
+        <form onSubmit={formik.handleSubmit}>
+          <Pane display="flex" flexDirection="column" paddingX="1rem">
+            <Pane display="flex" justifyContent="center">
+              <TextInput
+                name="email"
+                type="text"
+                placeholder="Email"
+                width={"100%"}
+                value={formik.values.email}
+                onChange={formik.handleChange}
+              />
+            </Pane>
+            <Pane display="flex" justifyContent="center" paddingY="1rem">
+              <TextInput
+                name="password"
+                type="password"
+                placeholder="Password"
+                width={"100%"}
+                value={formik.values.password}
+                onChange={formik.handleChange}
+              />
+            </Pane>
+            <Pane display="flex" gap="1rem">
+              <Button
+                type="submit"
+                display="flex"
+                flex="1"
+                appearance="default"
+              >
+                Login
+              </Button>
 
-            <ButtonLink
-              to="/register"
-              display="flex"
-              flex="1"
-              appearance="primary"
-            >
-              Register
-            </ButtonLink>
+              <ButtonLink
+                to="/register"
+                display="flex"
+                flex="1"
+                appearance="primary"
+              >
+                Register
+              </ButtonLink>
+            </Pane>
           </Pane>
-        </Pane>
+        </form>
       </Pane>
     </Pane>
   );
 };
 
-export default LoginPage;
+export default container(LoginPage);

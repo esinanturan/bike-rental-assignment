@@ -61,7 +61,7 @@ const UserListPage = ({
                     </ButtonLink>
                     <Confirm
                       confirmText="Are you sure you want to delete this item?"
-                      onDelete={onDeleteConfirmed}
+                      onConfirm={onDeleteConfirmed}
                       item={user}
                     >
                       <Button

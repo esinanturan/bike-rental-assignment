@@ -2,12 +2,16 @@ import { hoc } from "@";
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { Heading, Pane } from "evergreen-ui";
 import groupBy from "lodash.groupby";
-import { getProductListByFilter } from "@api";
 import { Rating } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setCurrentReservationProduct } from "@store/slices/reservation";
+import { getProductListByFilter } from "@api";
 
 const filterNames = ["model", "location", "isAvailable", "color", "rating"];
 
 const container = hoc((props) => {
+  const dispatch = useDispatch();
+
   const [filters, setFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [products, setProducts] = useState([]);
@@ -17,6 +21,13 @@ const container = hoc((props) => {
     const response = await getProductListByFilter("");
     if (response.success) setProducts(response.data);
   }, []);
+
+  const onReservationAction = useCallback(
+    (product) => {
+      dispatch(setCurrentReservationProduct(product));
+    },
+    [dispatch]
+  );
 
   const groupByProperties = useCallback(() => {
     if (!products.length) return;
@@ -122,6 +133,7 @@ const container = hoc((props) => {
     renderCustomItem,
     onFilterDeselected,
     filterProducts,
+    onReservationAction,
   };
 });
 

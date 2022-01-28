@@ -20,6 +20,7 @@ const ShowCasePage = ({
   onFilterDeselected,
   mappedFilters,
   renderCustomItem,
+  onReservationAction,
 }) => {
   return (
     <Pane display="flex" flex={1} flexDirection="column">
@@ -38,11 +39,14 @@ const ShowCasePage = ({
             selected={selectedFilters}
             onSelect={onFilterSelected}
             onDeselect={onFilterDeselected}
-            itemRenderer={(props) => {
-              return <Option {...props}>{renderCustomItem(props.item)}</Option>;
-            }}
+            itemRenderer={(props) => (
+              <Option {...props}>{renderCustomItem(props.item)}</Option>
+            )}
           >
-            <Button appearance="primary">
+            <Button
+              appearance="primary"
+              intent={selectedFilters?.length ? "danger" : "none"}
+            >
               <FilterListIcon marginRight="1rem" />
               {selectedFilters?.length
                 ? `${selectedFilters?.length} Selected`
@@ -99,6 +103,7 @@ const ShowCasePage = ({
                     intent="success"
                     to={`reservation/create/${product.id}`}
                     width="100%"
+                    onClick={() => onReservationAction(product)}
                   >
                     Reservation
                   </ButtonLink>

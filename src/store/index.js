@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage";
 import auth from "./slices/auth";
 import user from "./slices/user";
 import product from "./slices/product";
+import reservation from "./slices/reservation";
 
 const authConfig = {
   key: "#auth",
@@ -27,6 +28,7 @@ const reducers = combineReducers({
   auth: persistReducer(authConfig, auth),
   user: persistReducer(userConfig, user),
   product: persistReducer(productConfig, product),
+  reservation,
 });
 
 const store = createStore(reducers, composeWithDevTools());

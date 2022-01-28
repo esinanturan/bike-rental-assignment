@@ -1,5 +1,6 @@
 import { hoc } from "@";
 import { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const navigation = [
@@ -17,6 +18,11 @@ const navigation = [
       { label: "Products", value: "/product/list" },
       { label: "Reservations", value: "/reservation/list" },
     ],
+    managerOnly: true,
+  },
+  {
+    name: "Account",
+    children: [{ label: "Logout", value: "/logout" }],
   },
 ];
 
@@ -25,6 +31,7 @@ const container = hoc((props) => {
   const location = useLocation();
 
   const [currentNav, setCurrentNav] = useState("/product/all");
+  const auth = useSelector((state) => state.auth.auth);
 
   const onNavigationPressed = useCallback(
     (value) => {
@@ -46,6 +53,7 @@ const container = hoc((props) => {
     ...props,
     navigation,
     currentNav,
+    auth,
     onNavigationPressed,
   };
 });
