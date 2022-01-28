@@ -8,8 +8,23 @@ router.get(
   "/list",
   passport.authenticate("bearer", { session: false }),
   (req, res) => {
-    db.Product.findAll()
-      .then((products) => res.json({ success: true, data: products }))
+    db.Product.findAll({
+      include: [
+        {
+          model: db.Rating,
+          required: true,
+        },
+      ],
+    })
+      .then((products) => {
+        const mappedProducts = products.map((product) => ({
+          ...product.toJSON(),
+          rating:
+            product.Ratings.reduce((acc, curr) => (acc += curr.rate), 0) /
+            product.Ratings.length,
+        }));
+        res.json({ success: true, data: mappedProducts });
+      })
       .catch((err) => res.json({ success: false, message: err.message }));
   }
 );
@@ -18,8 +33,23 @@ router.get(
   "/all",
   passport.authenticate("bearer", { session: false }),
   (req, res) => {
-    db.Product.findAll()
-      .then((products) => res.json({ success: true, data: products }))
+    db.Product.findAll({
+      include: [
+        {
+          model: db.Rating,
+          required: true,
+        },
+      ],
+    })
+      .then((products) => {
+        const mappedProducts = products.map((product) => ({
+          ...product.toJSON(),
+          rating:
+            product.Ratings.reduce((acc, curr) => (acc += curr.rate), 0) /
+            product.Ratings.length,
+        }));
+        res.json({ success: true, data: mappedProducts });
+      })
       .catch((err) => res.json({ success: false, message: err.message }));
   }
 );
@@ -28,16 +58,29 @@ router.get(
   "/:productId",
   passport.authenticate("bearer", { session: false }),
   (req, res) => {
-    db.Product.findOne({ where: { id: req.params.productId } })
+    db.Product.findOne({
+      where: { id: req.params.productId },
+      include: [
+        {
+          model: db.Rating,
+          required: true,
+        },
+      ],
+    })
       .then((product) => {
         if (product instanceof db.Product !== true)
           return res.json({ success: false, message: "Product not found" });
 
         const productValue = product.toJSON();
+        const rating =
+          product.Ratings.reduce((acc, curr) => (acc += curr.rate), 0) /
+          product.Ratings.length;
+
         res.json({
           success: true,
           data: {
             ...productValue,
+            rating,
             availableRange: [
               productValue.availabilityStartDate,
               productValue.availabilityEndDate,

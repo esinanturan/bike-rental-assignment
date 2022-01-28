@@ -5,7 +5,7 @@ import groupBy from "lodash.groupby";
 import { Rating } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setCurrentReservationProduct } from "@store/slices/reservation";
-import { getProductListByFilter } from "@api";
+import { getProductListByFilter, rateProduct } from "@api";
 
 const filterNames = ["model", "location", "isAvailable", "color", "rating"];
 
@@ -15,12 +15,33 @@ const container = hoc((props) => {
   const [filters, setFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [products, setProducts] = useState([]);
-  //const [groupedProducts, setGroupedProducts] = useState({});
+
+  const [ratings, setRatings] = useState({});
 
   const fetchProductListByFilter = useCallback(async () => {
     const response = await getProductListByFilter("");
     if (response.success) setProducts(response.data);
   }, []);
+
+  const fetchRateProduct = useCallback(async (product, rating) => {
+    const response = await rateProduct(
+      {
+        productId: product.id,
+        rating,
+      },
+      product.id
+    );
+    console.log("rest", response);
+  }, []);
+
+  const onRateAction = useCallback(
+    (product, e) => {
+      const rate = { ...ratings, [product.id]: +e.target.value };
+      setRatings(rate);
+      fetchRateProduct(product, e.target.value);
+    },
+    [fetchRateProduct, ratings]
+  );
 
   const onReservationAction = useCallback(
     (product) => {
@@ -116,6 +137,8 @@ const container = hoc((props) => {
     [products, filterProducts, selectedFilters]
   );
 
+  const getRating = useCallback((proudctId) => ratings[proudctId], [ratings]);
+
   useEffect(() => {
     groupByProperties();
   }, [products, groupByProperties]);
@@ -129,11 +152,14 @@ const container = hoc((props) => {
     products: filteredProducts,
     mappedFilters,
     selectedFilters,
+    ratings,
     onFilterSelected,
     renderCustomItem,
     onFilterDeselected,
     filterProducts,
     onReservationAction,
+    onRateAction,
+    getRating,
   };
 });
 

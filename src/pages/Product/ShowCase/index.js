@@ -21,6 +21,8 @@ const ShowCasePage = ({
   mappedFilters,
   renderCustomItem,
   onReservationAction,
+  onRateAction,
+  getRating,
 }) => {
   return (
     <Pane display="flex" flex={1} flexDirection="column">
@@ -78,7 +80,11 @@ const ShowCasePage = ({
                 <Heading size={200}>Rating</Heading>
               </Pane>
               <Pane>
-                <Rating name="rating" value={+product.rating} disabled />
+                <Rating
+                  name="rating"
+                  onChange={(value) => onRateAction(product, value)}
+                  value={getRating(product.id) || +product.rating}
+                />
               </Pane>
             </Pane>
             <Pane textAlign="center">
@@ -94,7 +100,6 @@ const ShowCasePage = ({
                     <Heading size={200}>Available Date Range</Heading>
                   </Pane>
                   <Heading>{formatDate(product.availabilityStartDate)}</Heading>
-
                   <Heading>{formatDate(product.availabilityEndDate)}</Heading>
                 </Pane>
                 <Pane paddingY="1rem" display="flex" justifyContent="center">
