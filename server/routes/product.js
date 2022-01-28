@@ -12,7 +12,7 @@ router.get(
       include: [
         {
           model: db.Rating,
-          required: true,
+          required: false,
         },
       ],
     })
@@ -37,7 +37,7 @@ router.get(
       include: [
         {
           model: db.Rating,
-          required: true,
+          required: false,
         },
       ],
     })
@@ -63,7 +63,7 @@ router.get(
       include: [
         {
           model: db.Rating,
-          required: true,
+          required: false,
         },
       ],
     })
@@ -107,7 +107,7 @@ router.post(
       return res.status(422).json({ success: false, errors: errors.array() });
 
     const [availabilityStartDate, availabilityEndDate] =
-      req.body.availableRange;
+      req.body.availableRange || [];
 
     const values = {
       model: req.body.model,
