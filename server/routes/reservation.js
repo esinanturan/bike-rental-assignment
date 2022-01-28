@@ -5,9 +5,30 @@ const db = require("../models");
 const router = express.Router();
 
 router.get("/all", (req, res) => {
-  db.Reservation.findAll()
-    .then((reservations) => res.json({ succes: true, data: reservations }))
-    .catch((err) => res.json({ succes: false, message: err.message }));
+  db.Reservation.findAll({
+    include: [
+      {
+        model: db.User,
+        required: true,
+        attributes: { exclude: ["password", "token"] },
+      },
+      {
+        model: db.Product,
+        required: true,
+      },
+    ],
+  })
+    .then((reservations) => {
+      const mappedReservation = reservations.map((reservation) => ({
+        ...reservation.Product.toJSON(),
+        ...reservation.User.toJSON(),
+        ...reservation.toJSON(),
+        Product: undefined,
+        User: undefined,
+      }));
+      res.json({ success: true, data: mappedReservation });
+    })
+    .catch((err) => res.json({ success: false, message: err.message }));
 });
 
 router.get(
@@ -47,7 +68,7 @@ router.post(
     if (!errors.isEmpty())
       return res.status(422).json({ success: false, errors: errors.array() });
 
-    const [startTime, endTime] = req.body.pickedRange;
+    const [startTime, endTime] = req.body.pickedRange || [];
 
     db.Reservation.create({
       productId: req.body.productId,

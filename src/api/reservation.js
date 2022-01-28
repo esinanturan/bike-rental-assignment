@@ -8,3 +8,6 @@ export const getMyReservationList = () =>
 
 export const deleteReservationById = (id) =>
   jsonFetch(`reservation/delete/${id}`, { method: "DELETE", auth: true });
+
+export const getAllReservations = (id) =>
+  jsonFetch(`reservation/all`, { method: "GET", auth: true });

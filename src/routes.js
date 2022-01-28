@@ -13,6 +13,9 @@ const CreateReservationPage = React.lazy(() =>
   import("@pages/Reservation/Create")
 );
 const ReservationListPage = React.lazy(() => import("@pages/Reservation/List"));
+const ManageReservationListPage = React.lazy(() =>
+  import("@pages/Reservation/ManageList")
+);
 
 const UserListPage = React.lazy(() => import("@pages/User/List"));
 const CreateUserPage = React.lazy(() => import("@pages/User/Create"));
@@ -57,6 +60,11 @@ const routes = {
     {
       path: "/reservation/me",
       element: ReservationListPage,
+    },
+    {
+      path: "/reservation/list",
+      element: ManageReservationListPage,
+      managerOnly: true,
     },
     {
       path: "/user/list",
