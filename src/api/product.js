@@ -15,5 +15,5 @@ export const getProductById = (id) =>
 export const deleteProductById = (id) =>
   jsonFetch(`product/delete/${id}`, { method: "DELETE", auth: true });
 
-export const getProductListByFilter = (filters) =>
-  jsonFetch(`product/all${filters}`, { method: "GET", auth: true });
+export const getShowCaseProductList = () =>
+  jsonFetch(`product/all`, { method: "GET", auth: true });

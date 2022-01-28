@@ -6,6 +6,7 @@ import {
   Button,
   FilterListIcon,
   Option,
+  Spinner,
 } from "evergreen-ui";
 import Rating from "@mui/material/Rating";
 import Bike from "@components/Svgs/Bike";
@@ -23,6 +24,7 @@ const ShowCasePage = ({
   onReservationAction,
   onRateAction,
   getRating,
+  loading,
 }) => {
   return (
     <Pane display="flex" flex={1} flexDirection="column">
@@ -121,6 +123,16 @@ const ShowCasePage = ({
             )}
           </Pane>
         ))}
+
+        {loading ? (
+          <Pane>
+            <Spinner />
+          </Pane>
+        ) : !products?.length ? (
+          <Pane>
+            <Heading>No Product</Heading>
+          </Pane>
+        ) : null}
       </Pane>
     </Pane>
   );

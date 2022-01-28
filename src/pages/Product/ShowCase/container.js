@@ -5,7 +5,7 @@ import groupBy from "lodash.groupby";
 import { Rating } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { setCurrentReservationProduct } from "@store/slices/reservation";
-import { getProductListByFilter, rateProduct } from "@api";
+import { getShowCaseProductList, rateProduct } from "@api";
 
 const filterNames = ["model", "location", "isAvailable", "color", "rating"];
 
@@ -15,23 +15,24 @@ const container = hoc((props) => {
   const [filters, setFilters] = useState({});
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [products, setProducts] = useState([]);
-
+  const [loading, setLoading] = useState(false);
   const [ratings, setRatings] = useState({});
 
   const fetchProductListByFilter = useCallback(async () => {
-    const response = await getProductListByFilter("");
+    setLoading(true);
+    const response = await getShowCaseProductList();
+    setLoading(false);
     if (response.success) setProducts(response.data);
   }, []);
 
   const fetchRateProduct = useCallback(async (product, rating) => {
-    const response = await rateProduct(
+    await rateProduct(
       {
         productId: product.id,
         rating,
       },
       product.id
     );
-    console.log("rest", response);
   }, []);
 
   const onRateAction = useCallback(
@@ -53,15 +54,12 @@ const container = hoc((props) => {
   const groupByProperties = useCallback(() => {
     if (!products.length) return;
 
-    const names = {};
-    const groups = filterNames.reduce((acc, curr) => {
+    const names = filterNames.reduce((acc, curr) => {
       const groups = groupBy(products, curr);
-      names[curr] = Object.keys(groups);
-      acc[curr] = groups;
+      acc[curr] = Object.keys(groups);
       return acc;
     }, {});
     setFilters(names);
-    //setGroupedProducts(groups);
   }, [products]);
 
   const mappedFilters = useMemo(() => {
@@ -153,6 +151,7 @@ const container = hoc((props) => {
     mappedFilters,
     selectedFilters,
     ratings,
+    loading,
     onFilterSelected,
     renderCustomItem,
     onFilterDeselected,
