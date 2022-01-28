@@ -1,7 +1,7 @@
 import { Heading, Pane, TextInput, Button, Select } from "evergreen-ui";
 import container from "./container";
 
-const Edit = ({ formik, disabled }) => {
+const Edit = ({ formik, loading }) => {
   return (
     <Pane display="flex" flexDirection="column" flex={1}>
       <Pane>
@@ -18,6 +18,9 @@ const Edit = ({ formik, disabled }) => {
         <Pane display="flex" flexDirection="column" width="50%">
           <form onSubmit={formik.handleSubmit}>
             <Pane>
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Name:</Heading>
+              </Pane>
               <TextInput
                 name="name"
                 placeholder="Name"
@@ -27,6 +30,9 @@ const Edit = ({ formik, disabled }) => {
               />
             </Pane>
             <Pane paddingY="1rem">
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Email:</Heading>
+              </Pane>
               <TextInput
                 name="email"
                 placeholder="Email"
@@ -36,6 +42,9 @@ const Edit = ({ formik, disabled }) => {
               />
             </Pane>
             <Pane>
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Password:</Heading>
+              </Pane>
               <TextInput
                 type="password"
                 name="password"
@@ -46,6 +55,9 @@ const Edit = ({ formik, disabled }) => {
               />
             </Pane>
             <Pane paddingY="1rem">
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Role:</Heading>
+              </Pane>
               <Select
                 width="100%"
                 value={formik.values.role}
@@ -61,7 +73,7 @@ const Edit = ({ formik, disabled }) => {
                 type="submit"
                 appearance="primary"
                 width="10rem"
-                disabled={disabled}
+                isLoading={loading}
               >
                 Save
               </Button>

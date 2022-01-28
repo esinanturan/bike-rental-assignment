@@ -12,7 +12,7 @@ const container = hoc((props) => {
   const [currentUser, setCurrentUser] = useState(
     useSelector((state) => state.user.currentEditUser)
   );
-  const [disabled, setDisabled] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -27,9 +27,9 @@ const container = hoc((props) => {
   const fetchEditUser = useCallback(
     async (values) => {
       toaster.closeAll();
-      setDisabled(true);
+      setLoading(true);
       await editUser(values, params.id);
-      setDisabled(false);
+      setLoading(false);
     },
     [params.id]
   );
@@ -47,7 +47,7 @@ const container = hoc((props) => {
   return {
     ...props,
     formik,
-    disabled,
+    loading,
   };
 });
 

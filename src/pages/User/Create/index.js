@@ -1,7 +1,7 @@
 import { Heading, Pane, TextInput, Button, Select } from "evergreen-ui";
 import container from "./container";
 
-const Create = ({ formik }) => {
+const Create = ({ formik, loading }) => {
   return (
     <Pane display="flex" flexDirection="column" flex={1}>
       <Pane>
@@ -18,6 +18,10 @@ const Create = ({ formik }) => {
         <Pane display="flex" flexDirection="column" width="50%">
           <form onSubmit={formik.handleSubmit}>
             <Pane>
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Name:</Heading>
+              </Pane>
+
               <TextInput
                 name="name"
                 placeholder="Name"
@@ -27,6 +31,9 @@ const Create = ({ formik }) => {
               />
             </Pane>
             <Pane paddingY="1rem">
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Email:</Heading>
+              </Pane>
               <TextInput
                 name="email"
                 placeholder="Email"
@@ -36,6 +43,9 @@ const Create = ({ formik }) => {
               />
             </Pane>
             <Pane>
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Password:</Heading>
+              </Pane>
               <TextInput
                 type="password"
                 name="password"
@@ -46,6 +56,9 @@ const Create = ({ formik }) => {
               />
             </Pane>
             <Pane paddingY="1rem">
+              <Pane paddingBottom="0.5rem">
+                <Heading size={200}>Role:</Heading>
+              </Pane>
               <Select
                 width="100%"
                 value={formik.values.role}
@@ -57,7 +70,12 @@ const Create = ({ formik }) => {
               </Select>
             </Pane>
             <Pane>
-              <Button type="submit" appearance="primary" width="10rem">
+              <Button
+                type="submit"
+                isLoading={loading}
+                appearance="primary"
+                width="10rem"
+              >
                 Save
               </Button>
             </Pane>
