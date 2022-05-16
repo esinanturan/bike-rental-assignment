@@ -5,7 +5,7 @@ const initialState = {
 };
 
 const reservationSlice = createSlice({
-  name: "r",
+  name: "reservation",
   initialState,
   reducers: {
     setCurrentReservationProduct(state, { payload: action }) {
